@@ -10,7 +10,19 @@
 int my_getline(char line[], int lim);
 bool str_eq(char s1[], char s2[], int max_size);
 void stolower(char s1[], int len);
+void print_guessed_letters(bool letters_guessed[]);
 
+void print_guessed_word(bool letters_guessed[], char s[], int s_len) {
+    for(int i = 0; i < s_len; i++) {
+        if(s[i] == ' ') 
+            printf(" ");
+        else if(letters_guessed[s[i] - 'a'])
+            printf("%c", s[i]);
+        else
+            printf("_");
+    }
+    printf("\n");
+}
 
 int main() {
     CLEARSCREEN
@@ -19,7 +31,7 @@ int main() {
     int s_len = my_getline(s, MAXWORD);
     printf("Your word is: %s with length = %d\npress Enter to continue", s, s_len);
     getchar();
-    //CLEARSCREEN    
+    CLEARSCREEN    
 
     bool guessed = false;
     bool letters_guessd[26] = {0};
@@ -30,18 +42,24 @@ int main() {
     while(!guessed) {
         if(num_of_tries++ >= MAXTRIES) 
             break;
-
+        printf("Your guess: \n");
+        print_guessed_word(letters_guessd, s, s_len);
+        printf("Letters you guessed: \n");
+        print_guessed_letters(letters_guessd);
         printf("Enter a letter or a word: ");
+
         switch((guess_len = my_getline(guess, MAXWORD))) {
             case 1:
                 printf("give a word u dumbass\n");
             break;
             case 2:
-                printf("A letter!\n");
+                //printf("%c", guess[0]);
+                letters_guessd[guess[0] - 'a'] = true;
             break;
             default:
                 printf("A word!\n");
         }
+        CLEARSCREEN
     }
 
     return 0;
@@ -73,4 +91,15 @@ bool str_eq(char s1[], char s2[], int larger_size) {
             return false;
 
     return true; 
+}
+
+void print_guessed_letters(bool guessed_letters[]) {
+    for(int i = 0; i < 26; i++) {
+        char bar = (i == 25) ? ' ' : '|';
+        if(guessed_letters[i])
+            printf("%c %c ", ('a' + i), bar);
+        else 
+            printf("_ %c ", bar);
+    }
+    printf("\n");
 }
