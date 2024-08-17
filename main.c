@@ -38,26 +38,41 @@ int main() {
     int num_of_tries = 0;
     char guess[MAXWORD];
     int guess_len;
+    bool guessed_word = false;
 
     while(!guessed) {
         if(num_of_tries++ >= MAXTRIES) 
             break;
-        printf("Your guess: \n");
+
+        printf("Secret word: \n");
         print_guessed_word(letters_guessd, s, s_len);
         printf("Letters you guessed: \n");
         print_guessed_letters(letters_guessd);
+        if(guessed_word) {
+            printf("\nYour wrong guess: %s\n", guess);
+        }
+        else printf("\n\n\n");
         printf("Enter a letter or a word: ");
 
         switch((guess_len = my_getline(guess, MAXWORD))) {
             case 1:
+                num_of_tries--;
                 printf("give a word u dumbass\n");
             break;
             case 2:
-                //printf("%c", guess[0]);
+                guessed_word = false;
                 letters_guessd[guess[0] - 'a'] = true;
             break;
             default:
-                printf("A word!\n");
+                guessed_word = true;
+                if(str_eq(guess, s, (s_len > guess_len) ? s_len : guess_len)) {
+                    guessed = true;
+                    printf("You guessed correctly! \nNumber of tries: %d\n", 
+                            num_of_tries);
+                    printf("Press Enter to continue.");
+                    getchar();
+                }
+                else printf("Wrong guess!\n");
         }
         CLEARSCREEN
     }
